@@ -1,39 +1,64 @@
-# How to put this on Streamlit and get your live URL
+# Netflix Titles - Data Cleaning, Analysis & Visualization
 
-You have 3 files: `app.py`, `requirements.txt`, `netflix_titles.csv`. They all need to sit in the **same folder/repo**. Steps below — no prior Streamlit knowledge needed, takes about 10 minutes.
+This project looks at the Netflix Titles dataset (~8,800 movies and TV shows) and works through it in three stages: cleaning the raw data, analyzing it for patterns, and visualizing the results.
 
-## Step 1: Get a GitHub account (skip if you have one)
-Go to **github.com** → Sign up. Free.
+## Dataset
 
-## Step 2: Create a new repository
-1. Click the **+** icon (top right) → **New repository**
-2. Name it anything, e.g. `netflix-dashboard`
-3. Set it to **Public**
-4. Click **Create repository**
+`netflix_titles.csv` — one row per title, with columns for type (Movie/TV Show), title, director, cast, country, date added to Netflix, release year, rating, duration, and genre.
 
-## Step 3: Upload your files
-1. On the new repo page, click **"uploading an existing file"** (or "Add file" → "Upload files")
-2. Drag in all 3 files: `app.py`, `requirements.txt`, `netflix_titles.csv`
-3. Scroll down, click **Commit changes**
+## 1. Data Cleaning
 
-## Step 4: Deploy on Streamlit Community Cloud (free)
-1. Go to **share.streamlit.io**
-2. Click **Sign in** → sign in with your GitHub account → authorize it
-3. Click **"Create app"** (or "New app")
-4. Pick:
-   - Repository: the one you just made (`yourname/netflix-dashboard`)
-   - Branch: `main`
-   - Main file path: `app.py`
-5. Click **Deploy**
+The raw file had duplicates and a fair number of missing values, so before doing anything else I:
 
-## Step 5: Wait and grab your URL
-It'll spin for 1–3 minutes installing packages. When it's done, your app opens automatically. The URL in your browser bar (something like `https://yourname-netflix-dashboard.streamlit.app`) is your **live demo URL** — copy that and submit it.
+- Dropped duplicate rows
+- Filled missing `director`, `cast`, and `country` values with "Unknown" instead of dropping them (too much data to throw away)
+- Dropped the small number of rows missing `date_added` or `rating`
+- Cleaned up column names (lowercase, underscores instead of spaces) and renamed `show_id` → `id` and `listed_in` → `genre`
+- Dropped the `description` column since it wasn't needed for analysis
 
----
+Raw dataset: 8,807 rows. After cleaning: 8,793 rows.
 
-### If something goes wrong
-- **"File not found: netflix_titles.csv"** → make sure the CSV was actually uploaded to the repo root (not in a subfolder).
-- **Build/install error** → open "Manage app" → "Logs" on Streamlit Cloud to see the error message; it's almost always a typo in `requirements.txt`.
-- App looks fine locally-style but blank online → click "Reboot app" in the Streamlit Cloud dashboard.
+## 2. Data Analysis
 
-That's it — no command line, no installs on your own machine required.
+Some of the things I pulled out of the cleaned data:
+
+- **6,129 movies** vs **2,664 TV shows**
+- Longest movie: *Black Mirror: Bandersnatch* (312 min)
+- Shortest movie: *Silent* (3 min)
+- TV show with the most seasons: *Grey's Anatomy* (17 seasons)
+- Average movie length: ~99.6 minutes
+- Average number of seasons per TV show: ~1.75
+- Top countries producing content: United States, India, United Kingdom, Canada
+- Most common genres: International Movies, Dramas, Comedies, International TV Shows, Documentaries
+- Correlation between release year and duration was weak for both movies (-0.21) and TV shows (-0.08) — newer titles aren't really longer or shorter than older ones
+- Looked at how many titles were added to Netflix per year and per month to see growth trends over time
+
+## 3. Data Visualization
+
+Built charts to make the analysis easier to read at a glance:
+
+- Bar chart comparing number of movies vs TV shows
+- Pie chart showing the split between movies and TV shows
+- Line chart of titles added to Netflix per year
+- Histogram of release years to see when most content was made
+- Correlation heatmap across the numeric columns
+
+## Tools used
+
+- Python
+- Pandas / NumPy for cleaning and analysis
+- Matplotlib / Seaborn for the charts
+- Streamlit to bring it all together into one interactive app
+
+## Live demo
+
+[INSERT YOUR LIVE STREAMLIT URL HERE]
+
+## Files
+
+```
+app.py                  # combines all three stages into one app
+requirements.txt        # dependencies
+netflix_titles.csv      # the dataset
+screenshots/            # screenshots of the app
+```
